@@ -8,12 +8,12 @@ const API_BASE = isDev ? '' : ''
 
 // Search queries for flooring contractors (used in dev mode)
 const SEARCH_QUERIES = [
-  'commercial epoxy flooring contractor',
-  'resinous flooring contractor',
-  'industrial floor coatings contractor',
-  'concrete coatings contractor',
-  'commercial flooring contractor',
-  'industrial painting contractor',
+  'epoxy flooring',
+  'flooring contractor',
+  'concrete coatings',
+  'floor coatings',
+  'industrial flooring',
+  'commercial flooring',
 ]
 
 export async function searchLeads(city, limit = 25) {

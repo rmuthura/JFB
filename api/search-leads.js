@@ -2,12 +2,12 @@
 // This keeps the API key secure on the server
 
 const SEARCH_QUERIES = [
-  'commercial epoxy flooring contractor',
-  'resinous flooring contractor',
-  'industrial floor coatings contractor',
-  'concrete coatings contractor',
-  'commercial flooring contractor',
-  'industrial painting contractor',
+  'epoxy flooring',
+  'flooring contractor',
+  'concrete coatings',
+  'floor coatings',
+  'industrial flooring',
+  'commercial flooring',
 ]
 
 export default async function handler(req, res) {
