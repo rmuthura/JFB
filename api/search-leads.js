@@ -1,13 +1,22 @@
 // Vercel Serverless Function - Search for leads via OpenWebNinja
 // This keeps the API key secure on the server
 
+// Tier 1 - Primary targets (highest priority)
+// Tier 2 - Strong adjacent
+// Tier 3 - Opportunistic
 const SEARCH_QUERIES = [
-  'epoxy flooring',
-  'flooring contractor',
-  'concrete coatings',
-  'floor coatings',
-  'industrial flooring',
-  'commercial flooring',
+  // Tier 1 - Primary targets
+  'commercial epoxy flooring contractor',
+  'resinous flooring contractor',
+  'industrial floor coatings contractor',
+  'concrete coatings contractor',
+  // Tier 2 - Strong adjacent
+  'commercial flooring contractor',
+  'industrial painting contractor',
+  'facility maintenance contractor',
+  // Tier 3 - Opportunistic
+  'concrete polishing contractor',
+  'commercial property maintenance',
 ]
 
 export default async function handler(req, res) {

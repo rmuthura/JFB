@@ -18,7 +18,7 @@ export function exportLeadsToCSV(leads, city) {
     lead.email || 'Not found',
     lead.phone || 'Not found',
     lead.businessType,
-    `${lead.jfbRating}/5`,
+    `${lead.jfbRating} of 5`,  // Changed from "X/5" to prevent Excel date interpretation
     lead.priorityTier,
     city
   ])
@@ -35,7 +35,7 @@ export function exportMessagesToTxt(messages) {
   const content = messages.map(m =>
     `========================================\n` +
     `LEAD #${m.leadNumber}: ${m.companyName}\n` +
-    `Business Type: ${m.businessType} | Rating: ${m.rating}/5\n` +
+    `Business Type: ${m.businessType} | Rating: ${m.rating} of 5\n` +
     `========================================\n\n` +
     `${m.message}\n\n`
   ).join('\n')
