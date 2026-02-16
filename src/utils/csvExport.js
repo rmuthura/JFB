@@ -8,6 +8,8 @@ export function exportLeadsToCSV(leads, city) {
     'Business Type',
     'JFB Fit Rating',
     'Priority Tier',
+    'LinkedIn Search',
+    'Is Chain',
     'City Searched'
   ]
 
@@ -20,6 +22,8 @@ export function exportLeadsToCSV(leads, city) {
     lead.businessType,
     `${lead.jfbRating} of 5`,  // Changed from "X/5" to prevent Excel date interpretation
     lead.priorityTier,
+    lead.linkedInUrl || '',
+    lead.isChain ? 'Yes' : 'No',
     city
   ])
 

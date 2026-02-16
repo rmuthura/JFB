@@ -87,6 +87,7 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
               <SortHeader field="jfbRating">Rating</SortHeader>
               <SortHeader field="priorityTier">Tier</SortHeader>
               <th className="px-3 py-3 text-left text-xs font-heading font-semibold text-gray-400 uppercase tracking-wider">Contact</th>
+              <th className="px-3 py-3 text-left text-xs font-heading font-semibold text-gray-400 uppercase tracking-wider">LinkedIn</th>
               <th className="px-3 py-3 text-left text-xs font-heading font-semibold text-gray-400 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -114,10 +115,17 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
                       />
                     ) : (
                       <div>
-                        <div className="text-sm font-medium text-white">{lead.name}</div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-white">{lead.name}</span>
+                          {lead.isChain && (
+                            <span className="px-1.5 py-0.5 text-xs bg-orange-500/20 text-orange-400 rounded" title={lead.chainReason}>
+                              Chain
+                            </span>
+                          )}
+                        </div>
                         {lead.website && (
                           <a
-                            href={lead.website}
+                            href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-amber-400 hover:underline"
@@ -180,6 +188,24 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
                         <div className="text-amber-400 text-xs">{lead.email}</div>
                       )}
                     </div>
+                  </td>
+
+                  <td className="px-3 py-3">
+                    {lead.linkedInUrl && (
+                      <a
+                        href={lead.linkedInUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 rounded transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                        title="Search for owner on LinkedIn"
+                      >
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        Find Owner
+                      </a>
+                    )}
                   </td>
 
                   <td className="px-3 py-3">

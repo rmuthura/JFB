@@ -19,6 +19,47 @@ const SEARCH_QUERIES = [
   'commercial property maintenance',
 ]
 
+// Chain store detection
+const CHAIN_BLOCKLIST = [
+  'garage kings', 'garageexperts', 'garage experts', 'garage force',
+  'concrete craft', 'guardian', 'floor coverings international',
+  'n-hance', 'chem-dry', 'certapro', 'college hunks',
+  'servpro', 'stanley steemer', '1-800', 'the grounds guys',
+  'home depot', 'lowes', 'sherwin williams', 'ppg', 'benjamin moore',
+  'flooring america', 'carpet one', 'empire today', 'lumber liquidators',
+  'floor & decor', 'tile shop', 'menards', 'ace hardware',
+  'precision garage door', 'overhead door', 'clopay',
+  'mach 1 epoxy', 'mach one epoxy', 'hello garage', 'tailored living',
+]
+
+const CHAIN_KEYWORDS = [
+  'franchise', 'franchising', 'locations nationwide', 'national brand',
+  'serving multiple', 'multiple locations', 'locations across',
+]
+
+function detectChain(name, types = []) {
+  const text = `${name} ${types.join(' ')}`.toLowerCase()
+
+  for (const chain of CHAIN_BLOCKLIST) {
+    if (text.includes(chain)) {
+      return { isChain: true, reason: `Matches known chain: ${chain}` }
+    }
+  }
+
+  for (const keyword of CHAIN_KEYWORDS) {
+    if (text.includes(keyword)) {
+      return { isChain: true, reason: `Contains chain keyword: ${keyword}` }
+    }
+  }
+
+  return { isChain: false, reason: null }
+}
+
+function generateLinkedInUrl(companyName) {
+  const searchQuery = `${companyName} owner`
+  return `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(searchQuery)}`
+}
+
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -29,7 +70,8 @@ export default async function handler(req, res) {
     return res.status(200).end()
   }
 
-  const { city, limit = 25 } = req.query
+  const { city, filterChains = 'true' } = req.query
+  const shouldFilterChains = filterChains === 'true'
 
   if (!city) {
     return res.status(400).json({ error: 'City parameter is required' })
@@ -46,12 +88,10 @@ export default async function handler(req, res) {
 
   try {
     for (const queryBase of SEARCH_QUERIES) {
-      if (allResults.length >= limit) break
-
       const query = `${queryBase} ${city}`
       const params = new URLSearchParams({
         query,
-        limit: 10,
+        limit: 50,  // Increased from 10 to get more results
         language: 'en',
         region: 'us'
       })
@@ -71,9 +111,7 @@ export default async function handler(req, res) {
         if (seenIds.has(biz.business_id)) continue
         seenIds.add(biz.business_id)
 
-        if (allResults.length >= limit) break
-
-        allResults.push({
+        const lead = {
           id: biz.business_id,
           name: biz.name,
           website: biz.website || null,
@@ -86,7 +124,20 @@ export default async function handler(req, res) {
           rating: biz.rating,
           reviewCount: biz.review_count || 0,
           types: biz.types || [],
-        })
+          linkedInUrl: generateLinkedInUrl(biz.name),
+        }
+
+        // Check if it's a chain store
+        const chainCheck = detectChain(biz.name, biz.types || [])
+        lead.isChain = chainCheck.isChain
+        lead.chainReason = chainCheck.reason
+
+        // Filter out chains if requested
+        if (shouldFilterChains && lead.isChain) {
+          continue
+        }
+
+        allResults.push(lead)
       }
     }
 
