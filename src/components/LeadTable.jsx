@@ -38,13 +38,13 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
     }
   }
 
-  const startEdit = (lead, index) => {
-    setEditingId(index)
+  const startEdit = (lead) => {
+    setEditingId(lead.id)
     setEditForm({ ...lead })
   }
 
-  const saveEdit = (index) => {
-    onUpdateLead(index, editForm)
+  const saveEdit = () => {
+    onUpdateLead(editForm.id, editForm)
     setEditingId(null)
   }
 
@@ -93,14 +93,14 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
           </thead>
           <tbody className="divide-y divide-gray-700">
             {sortedLeads.map((lead, index) => {
-              const isEditing = editingId === index
-              const isSelected = selectedLead === index
+              const isEditing = editingId === lead.id
+              const isSelected = selectedLead === lead.id
 
               return (
                 <tr
                   key={lead.id || index}
                   className={`hover:bg-dark-bg/50 transition-colors cursor-pointer ${isSelected ? 'bg-amber-500/10 border-l-2 border-amber-400' : ''}`}
-                  onClick={() => onSelectLead && onSelectLead(index)}
+                  onClick={() => onSelectLead && onSelectLead(lead.id)}
                 >
                   <td className="px-3 py-3 text-sm text-gray-400">{index + 1}</td>
 
@@ -212,7 +212,7 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
                     {isEditing ? (
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
-                          onClick={() => saveEdit(index)}
+                          onClick={() => saveEdit()}
                           className="text-green-400 hover:text-green-300 text-sm"
                         >
                           Save
@@ -227,13 +227,13 @@ export default function LeadTable({ leads, onRemoveLead, onUpdateLead, onSelectL
                     ) : (
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
-                          onClick={() => startEdit(lead, index)}
+                          onClick={() => startEdit(lead)}
                           className="text-amber-400 hover:text-amber-300 text-sm"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => onRemoveLead(index)}
+                          onClick={() => onRemoveLead(lead.id)}
                           className="text-red-400 hover:text-red-300 text-sm"
                         >
                           Remove

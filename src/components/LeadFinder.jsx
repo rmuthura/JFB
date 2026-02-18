@@ -38,10 +38,13 @@ export default function LeadFinder({ leads, currentCity, onLeadsFound, onRemoveL
         }
       })
 
-      // Sort by rating (highest first)
-      processedLeads.sort((a, b) => b.jfbRating - a.jfbRating)
+      // Filter out leads with rating below 3 (Tier 3 and lower)
+      const filteredLeads = processedLeads.filter(lead => lead.jfbRating >= 3)
 
-      onLeadsFound(processedLeads, searchCity.trim())
+      // Sort by rating (highest first)
+      filteredLeads.sort((a, b) => b.jfbRating - a.jfbRating)
+
+      onLeadsFound(filteredLeads, searchCity.trim())
       setSearchCity('')
     } catch (err) {
       console.error('Search error:', err)

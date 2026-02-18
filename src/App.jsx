@@ -36,12 +36,12 @@ function App() {
     setCurrentCity(city)
   }
 
-  const handleRemoveLead = (index) => {
-    setLeads(prev => prev.filter((_, i) => i !== index))
+  const handleRemoveLead = (leadId) => {
+    setLeads(prev => prev.filter(lead => lead.id !== leadId))
   }
 
-  const handleUpdateLead = (index, updatedLead) => {
-    setLeads(prev => prev.map((lead, i) => i === index ? updatedLead : lead))
+  const handleUpdateLead = (leadId, updatedLead) => {
+    setLeads(prev => prev.map(lead => lead.id === leadId ? updatedLead : lead))
   }
 
   const handleLoadHistory = (item) => {
